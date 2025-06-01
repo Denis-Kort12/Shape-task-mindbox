@@ -29,11 +29,10 @@ class Triangle(Shape):
         self.second_side = second_side
         self.third_side = third_side
 
-        if self._is_valid():
-            raise ValueError("Invalid sides (triangle)")
         if first_side <= 0 or second_side <= 0 or third_side <= 0:
             raise ValueError("Sides no positive (triangle)")
-
+        if not self._is_valid():
+            raise ValueError("Invalid sides (triangle)")
 
     def calculate_square(self):
         half_perimeter = (self.first_side + self.second_side + self.third_side)/2
@@ -49,12 +48,8 @@ class Triangle(Shape):
         list_sides = [self.first_side, self.second_side, self.third_side]
         list_sides.sort()
 
-        return math.isclose(list_sides[0]**2 + list_sides[1]**2, list_sides[2]**2)
+        return math.isclose(list_sides[0]**2 + list_sides[1]**2, list_sides[2]**2, rel_tol=1e-9)
 
     def _is_valid(self):
-
-        for combo in combinations([self.first_side, self.second_side, self.third_side],3):
-            if combo[0] + combo[1] > combo[2]:
-                return False
-
-        return True
+        a, b, c = self.first_side, self.second_side, self.third_side
+        return (a + b > c) and (a + c > b) and (b + c > a)
